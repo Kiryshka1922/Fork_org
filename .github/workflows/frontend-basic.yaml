@@ -1,0 +1,24 @@
+
+name: Frontend Basic Checks
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  check-frontend-pr:
+    # Запускаем только если PR из ветки, начинающейся с frontend/
+    if: startsWith(github.event.pull_request.head.ref, 'frontend/')
+    
+    runs-on: ubuntu-latest
+    name: Frontend PR Validation
+    
+    steps:
+      - name: Print PR info
+        run: |
+          echo "✅ Запускаем проверки для фронтенд PR"
+          echo "Ветка источника: ${{ github.event.pull_request.head.ref }}"
+          echo "Ветка назначения: ${{ github.event.pull_request.base.ref }}"
+      
+      - name: Hello World
+        run: echo "Hello from frontend PR check!"
