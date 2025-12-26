@@ -26,7 +26,6 @@ jobs:
           
           # Пытаемся запушить
           git push origin HEAD || echo "❌ Push failed"
-            - name: Create PR
       - name: create PR
         run: | 
           # Создаем новый PR в основном репо
