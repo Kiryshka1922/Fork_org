@@ -26,3 +26,14 @@ jobs:
           
           # Пытаемся запушить
           git push origin HEAD || echo "❌ Push failed"
+            - name: Create PR
+      - name: create PR
+        run: | 
+          # Создаем новый PR в основном репо
+          gh pr create \
+            --title "🎨 Design sync: ${{ github.event.pull_request.title }}" \
+            --body "Auto-synced from fork PR #${{ github.event.pull_request.number }}" \
+            --base main \
+            --head test-permissions-$(date +%s) \
+            --label "design,auto-sync"
+          
