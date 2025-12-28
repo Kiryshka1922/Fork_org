@@ -2,7 +2,7 @@ name: Test Permissions
 on: workflow_dispatch
 run-name: Test Permissions
 env:
-  DATE: $(date +'%Y-%m-%d')
+  DATE: (date +'%Y-%m-%d')
   BRANCH_NAME: "test/permissions-${DATE}-${{ github.run_id }}"
 
 jobs:
@@ -19,6 +19,12 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Setup Variables
+        run: |
+          DATE=$(date +'%Y-%m-%d')
+          BRANCH_NAME="test/permissions-${DATE}-${{ github.run_id }}"
+
+          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
       - name: Test push
         run: |
           # Создаем тестовую ветку
