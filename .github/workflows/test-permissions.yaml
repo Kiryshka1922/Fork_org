@@ -1,5 +1,6 @@
 name: Test Permissions
 on: workflow_dispatch
+run-name: Test Permissions
 
 jobs:
   test:
@@ -9,31 +10,33 @@ jobs:
       pull-requests: write
       
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
       - name: Setup Git bot user
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
       - name: Test push
         run: |
+          DATE=$(date +'%Y-%m-%d')
+          BRANCH_NAME="test/permissions-${DATE}-${{ github.run_id }}"
           # Создаем тестовую ветку
-          git checkout -b test-permissions-$(date +%s)
+          git checkout -b "$BRANCH_NAME"
           echo "test" > test-file.txt
           git add test-file.txt
           git commit -m "Test commit"
           
           # Пытаемся запушить
-          git push origin HEAD || echo "❌ Push failed"
+          git push origin || echo "❌ Push failed"
       - name: create PR
         run: | 
           # Создаем новый PR в основном репо
           gh pr create \
-            --title "🎨 Design sync: ${{ github.event.pull_request.title }}" \
-            --body "Auto-synced from fork PR #${{ github.event.pull_request.number }}" \
+            --title "🎨 Design sync:" \
+            --body "Auto-synced from fork PR " \
             --base main \
-            --head test-permissions-$(date +%s) \
+            --head "test/permissions-${DATE}-${{ github.run_id }}" \
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
